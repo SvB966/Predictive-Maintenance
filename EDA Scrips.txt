@@ -1,0 +1,119 @@
+Descriptive Analysis 
+# Importing Necessary Libraries
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the Dataset
+data = pd.read_csv('/path/to/your/dataset.csv')
+
+# **Descriptive Analysis**
+
+# **1. Basic Information**
+# Getting basic information about the dataset
+print("\n**Basic Information**")
+print(data.info())
+
+# **2. Summary Statistics**
+# Obtaining summary statistics of numerical features
+print("\n**Summary Statistics**")
+print(data.describe())
+
+# **3. Checking for Missing Values**
+# Checking for any missing values in the dataset
+print("\n**Missing Values Check**")
+print(data.isnull().sum())
+
+# **4. Target Variable Analysis**
+# Checking the distribution of the target variable
+print("\n**Target Variable Distribution**")
+print(data['Target'].value_counts(normalize=True))
+
+# **5. Visual Analysis**
+# **Histograms for Numerical Variables**
+# Visualizing distributions of numerical features
+numerical_features = ['Air temperature [K]', 'Process temperature [K]', 'Rotational speed [rpm]', 'Torque [Nm]', 'Tool wear [min]']
+for feature in numerical_features:
+    plt.figure(figsize=(10, 6))
+    sns.histplot(data[feature], bins=30, kde=True, color='skyblue')
+    plt.title(f'Histogram of {feature}')
+    plt.xlabel(feature)
+    plt.ylabel('Frequency')
+    plt.grid(axis='y', linestyle='--', alpha=0.7)
+    plt.show()
+
+# **Bar Plot for Target Variable**
+# Visualizing the distribution of the target variable
+plt.figure(figsize=(6, 6))
+sns.countplot(x='Target', data=data, palette='viridis')
+plt.title('Bar Plot of Target Variable (Machine Failure)')
+plt.xlabel('Machine Failure')
+plt.ylabel('Count')
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.show()
+
+
+Correlation Analysis
+import seaborn as sns
+import matplotlib.pyplot as plt
+# Extracting numerical columns for correlation analysis
+numerical_cols = ['Air temperature [K]', 'Process temperature [K]', 'Rotational speed [rpm]', 
+                  'Torque [Nm]', 'Tool wear [min]', 'Target']
+# Calculating the correlation matrix
+correlation_matrix = df[numerical_cols].corr()
+# Plotting the heatmap
+plt.figure(figsize=(10, 6))
+sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=.5)
+plt.title('Correlation Matrix Heatmap')
+plt.show()
+Outlier Analysis
+# Correcting the column names and re-creating the boxplots
+numerical_cols_corrected = [
+    "Air temperature [K]",
+    "Process temperature [K]",
+    "Rotational speed [rpm]",
+    "Torque [Nm]",
+    "Tool wear [min]",
+]
+# Plotting boxplots for all numerical columns
+plt.figure(figsize=(15, 10))
+for i, col in enumerate(numerical_cols_corrected, 1):
+    plt.subplot(2, 3, i)
+    sns.boxplot(y=data[col])
+    plt.title(f'Boxplot of {col}')
+    plt.ylabel(col)
+plt.tight_layout()
+plt.show()
+Failure Type Analysis
+# Analyzing the distribution and frequency of different failure types
+failure_type_counts = df['Failure Type'].value_counts()
+failure_type_counts_percentage = df['Failure Type'].value_counts(normalize=True) * 100
+
+# Plotting the distribution of failure types
+plt.figure(figsize=(12, 6))
+failure_type_counts.plot(kind='bar', color='teal', alpha=0.8)
+plt.title('Distribution of Failure Types')
+plt.xlabel('Failure Type')
+plt.ylabel('Frequency')
+plt.xticks(rotation=45)
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.tight_layout()
+plt.show()
+
+failure_type_counts, failure_type_counts_percentage
+# Correcting the column name and visualizing the distribution of failure types excluding "No Failure"
+
+# Filtering out "No Failure"
+failure_data_filtered = data[data['Failure Type'] != 'No Failure']
+
+# Plotting
+plt.figure(figsize=(10, 6))
+sns.countplot(x='Failure Type', data=failure_data_filtered, palette='viridis', order=failure_data_filtered['Failure Type'].value_counts().index)
+plt.title('Distribution of Failure Types (Excluding No Failure)', fontsize=16)
+plt.xlabel('Failure Type', fontsize=14)
+plt.ylabel('Count', fontsize=14)
+plt.xticks(rotation=45, fontsize=12, ha='right')
+plt.yticks(fontsize=12)
+plt.tight_layout()
+plt.show()
+1

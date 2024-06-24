@@ -1,0 +1,36 @@
+Preprocessing: One-hot and Label Encoding
+pythonCopy code
+from sklearn.preprocessing import OneHotEncoder, LabelEncoder from sklearn.compose import ColumnTransformer # Initialize and fit the one-hot encoder one_hot_encoder = OneHotEncoder() transformer = ColumnTransformer([("one_hot_encoder", one_hot_encoder, ["Type", "Target"])], remainder="passthrough") transformer.fit(X_train) # Transform the training and test sets encoded_X_train = transformer.transform(X_train) encoded_X_test = transformer.transform(X_test) # Initialize and fit the label encoder label_encoder = LabelEncoder() label_encoder.fit(y_train) # Transform the training and test target variables encoded_y_train = label_encoder.transform(y_train) encoded_y_test = label_encoder.transform(y_test) # Display the transformed training data's shape encoded_X_train.shape, encoded_y_train.shape 
+
+Training: Random Forest Classifier
+pythonCopy code
+from sklearn.ensemble import RandomForestClassifier # Initialize and train the Random Forest Classifier rfc = RandomForestClassifier(random_state=7, verbose=0) rfc.fit(encoded_X_train, encoded_y_train) # Evaluate the classifier on training and test sets rfc_train_score = rfc.score(encoded_X_train, encoded_y_train) rfc_test_score = rfc.score(encoded_X_test, encoded_y_test) rfc_train_score, rfc_test_score 
+
+Visualization: Optimized Classification Report Heatmap
+pythonCopy code
+def optimized_classification_report_heatmap(cr, model_name=""): """Generate optimized heatmap for classification report.""" plt.figure(figsize=(10, 6)) sns.heatmap(pd.DataFrame(cr).iloc[:-1, :-1].T, annot=True, cmap='Blues', fmt='.2f', linewidths=0.5, linecolor='gray') plt.title(f"{model_name} Classification Report", fontsize=15, fontweight='bold') plt.ylabel("Metrics", fontsize=12) plt.xlabel("Classes", fontsize=12) plt.yticks(rotation=0) plt.show() 
+
+Visualization: Optimized Confusion Matrix Display
+pythonCopy code
+def optimized_confusion_matrix_display(predicted_y, true_y=encoded_y_test, model_name=""): """Generate optimized confusion matrix display.""" fig, ax = plt.subplots(figsize=(8, 6)) cm = confusion_matrix(predicted_y, true_y) sns.heatmap(cm, annot=True, cmap='Blues', fmt='g', linewidths=0.5, linecolor='gray', ax=ax) ax.set_title(f"{model_name} Confusion Matrix", fontsize=15, fontweight='bold') ax.set_xlabel('True labels', fontsize=12) ax.set_ylabel('Predicted labels', fontsize=12) ax.set_xticklabels(label_encoder.classes_, rotation=45, ha='right') ax.set_yticklabels(label_encoder.classes_, rotation=45, ha='right') plt.show() 
+
+
+Evaluation: Random Forest Classifier
+pythonCopy code
+# Generate optimized classification report heatmap optimized_classification_report_heatmap(rfc_cr, model_name="Random Forest") # Generate optimized confusion matrix display optimized_confusion_matrix_display(rfc_predicted_y, model_name="Random Forest") 
+
+Training & Evaluation: Logistic Regression
+pythonCopy code
+from sklearn.linear_model import LogisticRegression # Initialize and train the Logistic Regression model lr = LogisticRegression(random_state=7, max_iter=1000) lr.fit(encoded_X_train, encoded_y_train) # Evaluate the classifier on training and test sets lr_train_score = lr.score(encoded_X_train, encoded_y_train) lr_test_score = lr.score(encoded_X_test, encoded_y_test) # Predictions using the Logistic Regression model lr_predicted_y = lr.predict(encoded_X_test) # Generate optimized classification report heatmap lr_cr = classification_report(encoded_y_test, lr_predicted_y, output_dict=True, zero_division=0) optimized_classification_report_heatmap(lr_cr, model_name="Logistic Regression") # Generate optimized confusion matrix display optimized_confusion_matrix_display(lr_predicted_y, model_name="Logistic Regression") lr_train_score, lr_test_score 
+
+Training: Decision Tree Classifier
+pythonCopy code
+from sklearn.tree import DecisionTreeClassifier # (Further code for training and evaluation of Decision Tree Classifier will go here) 
+Training & Evaluation: Decision Tree Classifier
+pythonCopy code
+# Initialize and train the Decision Tree Classifier dtc = DecisionTreeClassifier(random_state=7) dtc.fit(encoded_X_train, encoded_y_train) # Evaluate the classifier on training and test sets dtc_train_score = dtc.score(encoded_X_train, encoded_y_train) dtc_test_score = dtc.score(encoded_X_test, encoded_y_test) # Predictions using the Decision Tree Classifier dtc_predicted_y = dtc.predict(encoded_X_test) # Generate optimized classification report heatmap dtc_cr = classification_report(encoded_y_test, dtc_predicted_y, output_dict=True, zero_division=0) optimized_classification_report_heatmap(dtc_cr, model_name="Decision Tree") # Generate optimized confusion matrix display optimized_confusion_matrix_display(dtc_predicted_y, model_name="Decision Tree") dtc_train_score, dtc_test_score 
+
+Training & Evaluation: Support Vector Machine Classifier
+pythonCopy code
+from sklearn.svm import SVC # Initialize and train the Support Vector Machine Classifier svc = SVC(random_state=7, probability=True) svc.fit(encoded_X_train, encoded_y_train) # Evaluate the classifier on training and test sets svc_train_score = svc.score(encoded_X_train, encoded_y_train) svc_test_score = svc.score(encoded_X_test, encoded_y_test) # Predictions using the SVM Classifier svc_predicted_y = svc.predict(encoded_X_test) # Generate optimized classification report heatmap svc_cr = classification_report(encoded_y_test, svc_predicted_y, output_dict=True, zero_division=0) optimized_classification_report_heatmap(svc_cr, model_name="Support Vector Machine") # Generate optimized confusion matrix display optimized_confusion_matrix_display(svc_predicted_y, model_name="Support Vector Machine") svc_train_score, svc_test_score
+

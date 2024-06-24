@@ -1,0 +1,53 @@
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.impute import SimpleImputer
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+
+# Load data
+data = pd.read_csv('/path_to_your_data/Machine Failure prediction.csv')
+
+# Define features and target
+features = data.drop(columns=['machine failure', 'failure type'])
+target_failure = data['machine failure']
+target_failure_type = data['failure type']
+
+# Identify categorical and numerical columns
+categorical_cols = features.select_dtypes(include=['object']).columns.tolist()
+numerical_cols = features.select_dtypes(exclude=['object']).columns.tolist()
+
+# Preprocessing for numerical data: standardization and missing value imputation
+numerical_transformer = Pipeline(steps=[
+    ('imputer', SimpleImputer(strategy='mean')),
+    ('scaler', StandardScaler())
+])
+
+# Preprocessing for categorical data: one-hot encoding and missing value imputation
+categorical_transformer = Pipeline(steps=[
+    ('imputer', SimpleImputer(strategy='most_frequent')),
+    ('onehot', OneHotEncoder(handle_unknown='ignore'))
+])
+
+# Bundle preprocessing for numerical and categorical data
+preprocessor = ColumnTransformer(
+    transformers=[
+        ('num', numerical_transformer, numerical_cols),
+        ('cat', categorical_transformer, categorical_cols)
+    ])
+
+# Define the model
+# ... [YOUR MODEL DEFINITION HERE] ...
+
+# Bundle preprocessing and modeling code in a pipeline
+# my_pipeline = Pipeline(steps=[('preprocessor', preprocessor), ('model', model)])
+
+# Preprocessing of training data, fit model 
+# my_pipeline.fit(X_train, y_train)
+
+# Preprocessing of validation data, get predictions
+# preds = my_pipeline.predict(X_valid)
+
+# Note: Ensure you adjust the file paths and model definitions according to your specific use case and structure
+
